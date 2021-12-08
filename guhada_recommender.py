@@ -39,13 +39,14 @@ from recommenders.content_based import content_model
 
 # Data Loading
 title_list = load_movie_titles('resources/data/movies.csv')
+# gender_list = 
 
 # App declaration
 def main():
 
     # DO NOT REMOVE the 'Recommender System' option below, however,
     # you are welcome to add more options to enrich your app.
-    page_options = ["Recommender System","Solution Overview"]
+    page_options = ["Recommender System", "Solution Overview"]
 
     # -------------------------------------------------------------------
     # ----------- !! THIS CODE MUST NOT BE ALTERED !! -------------------
@@ -53,26 +54,33 @@ def main():
     page_selection = st.sidebar.selectbox("Choose Option", page_options)
     if page_selection == "Recommender System":
         # Header contents
-        st.write('# Movie Recommender Engine')
-        st.write('### EXPLORE Data Science Academy Unsupervised Predict')
-        st.image('resources/imgs/Image_header.png',use_column_width=True)
-        # Recommender System algorithm selection
-        sys = st.radio("Select an algorithm",
-                       ('Content Based Filtering',
-                        'Collaborative Based Filtering'))
+        st.write('# Guhada Luxury Recommender Engine')
+        st.write('### Save your fingers to search for the best!')
+        st.image('resources/imgs/main_page.png',use_column_width=True)
 
-        # User-based preferences
-        st.write('### Enter Your Three Favorite Movies')
-        movie_1 = st.selectbox('Fisrt Option',title_list[14930:15200])
-        movie_2 = st.selectbox('Second Option',title_list[25055:25255])
-        movie_3 = st.selectbox('Third Option',title_list[21100:21200])
-        fav_movies = [movie_1,movie_2,movie_3]
+        # Recommender System algorithm selection
+        st.write('### Recommendation Options')
+        sys = st.radio(('Hybrid Filtering(with user information)',
+                        'Contents-based Filtering(without user information)'))
+
+        # User-based preferences & needs
+        st.write('### Enter Your Preferences')
+        category = st.selectbox('Category', title_list[14930:15200])
+        movie_2 = st.selectbox('Second Option', title_list[25055:25255])
+        movie_3 = st.selectbox('Third Option', title_list[21100:21200])
+        user_pref = [category, movie_2, movie_3]
 
         # Perform top-10 movie recommendation generation
-        if sys == 'Content Based Filtering':
-            if st.button("Recommend"):
+        if sys == 'Hybrid Filtering(with user information)':
+            # Basic user information (optional)
+            st.write('### Enter Your Information')
+            gender = st.selectbox('Gender',title_list[14930:15200])
+            age = st.selectbox('Age',title_list[25055:25255])
+            user_info = [gender, age]
+            
+            if st.button("Surprise Me!"):
                 try:
-                    with st.spinner('Crunching the numbers...'):
+                    with st.spinner('Searching for the best...'):
                         top_recommendations = content_model(movie_list=fav_movies,
                                                             top_n=10)
                     st.title("We think you'll like:")
@@ -83,10 +91,10 @@ def main():
                               We'll need to fix it!")
 
 
-        if sys == 'Collaborative Based Filtering':
-            if st.button("Recommend"):
+        if sys == 'Contents-based Filtering(without user information)':
+            if st.button("Surprise Me!"):
                 try:
-                    with st.spinner('Crunching the numbers...'):
+                    with st.spinner('Searching for the best...'):
                         top_recommendations = collab_model(movie_list=fav_movies,
                                                            top_n=10)
                     st.title("We think you'll like:")
